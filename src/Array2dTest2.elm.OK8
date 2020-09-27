@@ -3,7 +3,7 @@ module Array2dTest2 exposing (..)
 import Array
 import Array2D
 import Array2dOp
-import Regex
+
 
 
 {--
@@ -977,23 +977,13 @@ type alias Formula =
     , f : String
     }
 
-type alias CellRef = (Int, Int)
 
 type alias Cell =
     { value : CellValue
     , formula : Formula
     , name : String
-    , ref_To : (Maybe (Array.Array CellRef))
-    , ref_From : (Maybe (Array.Array CellRef))
     }
 
-{--
-cellSet : Int -> Int-> Cell -> AutoArray2D -> AytoArray2D
-cellSet row col cell autoarray2d =
-     let
-        new_cell = if cell.formula then
-                      
---}
 
 defaultCell__ : Cell
 defaultCell__ =
@@ -1005,8 +995,6 @@ defaultCell__ =
         { eval = False
         , f = ""
         }
-        , ref_To = Nothing
-        , ref_From = Nothing
     }
 
 type SetCellValue 
@@ -1028,12 +1016,7 @@ cellSetValueAutoArray2D c_ r_ value autoarray2d_ =
                  SetString s ->
                       StringCell s
     in
-    cellSetAutoArray2D c_ r_ { name = "fc"
-                              , value = value_ 
-                              , formula = { eval = False, f = "" } 
-                              , ref_To = Nothing
-                              , ref_From = Nothing
-                              } autoarray2d_
+    cellSetAutoArray2D c_ r_ { name = "fc", value = value_, formula = { eval = False, f = "" } } autoarray2d_
 
 
 g10 =
@@ -1041,30 +1024,16 @@ g10 =
 
 
 g11 =
-    cellSetAutoArray2D 0 0 { name = "fc" 
-                             ,value = IntCell 5
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = Nothing
-                             } g10
+    cellSetAutoArray2D 0 0 { name = "fc", value = IntCell 5, formula = { eval = False, f = "" } } g10
 
 
 g12 =
-    cellSetAutoArray2D 99 99 { name = "fc" 
-                             ,value = IntCell 7
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = Nothing
-                             } g11
+    cellSetAutoArray2D 99 99 { name = "sc", value = IntCell 7, formula = { eval = False, f = "" } } g11
 
 
 g13 =
-    cellSetAutoArray2D 0 0 { name = "fc" 
-                             ,value = IntCell 0
-                             ,formula = { eval = True, f = "=(0,0) + (99,99)" }
-                             , ref_To = Nothing
-                             , ref_From = Nothing
-                             } g12
+    cellSetAutoArray2D 100 100 { name = "sc", value = IntCell 0, formula = { eval = True, f = "= (0,0) + (99,99)" } } g12
+
 
 func3_ ( r, c ) cell_value acc =
     let
@@ -1167,8 +1136,8 @@ d2  aa2d =
     in
      result
 
-dump : AutoArray2D Cell -> String
-dump  aa2d =
+d : AutoArray2D Cell -> String
+d  aa2d =
     let
         row_max = aa2d.head_size_x * aa2d.surface_size
         col_max = aa2d.head_size_y * aa2d.surface_size
@@ -1182,10 +1151,8 @@ dump  aa2d =
                       case cell.value of
                           StringCell str_ ->
                                   str_
-                          IntCell num ->
-                                  String.fromInt num
-                          --_ ->
-                          --        "n/a"
+                          _ ->
+                                  "n/a"
                           
               in
                 if c >= col_max then
@@ -1233,8 +1200,6 @@ d2d  aa2d =
                 { eval = False
                 , f = ""
                 }
-            , ref_To = Nothing
-            , ref_From = Nothing
             }
 
         row_max = aa2d.head_size_x * aa2d.surface_size
@@ -1301,66 +1266,10 @@ z11 =  cellSetValueAutoArray2D 0 0 (SetString "00")
 
    <|  z10
 
-z12 = dump z11
+z12 = d z11
 z13 = d2d z11
 
 z14 = cloneAutoArray2D z11
 z15 = insertRowAutoArray2D 1 z11
 z16 = insertColAutoArray2D 1 z11
-
--------------------------------------------
--- Formula TEST
-
-ref_to = Array.fromList [(0,0), (0,1)]
-
-ref_from = Array.fromList [(1,1)]
-
-formula = "[0] + [1]"
-
-f10 =
-    initAutoArray2D 2 2 2 defaultCell__
-
-
-f11 =
-    cellSetAutoArray2D 0 0 { name = "fc" 
-                             ,value = IntCell 5
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = (Just ref_from)
-                             } 
- <| cellSetAutoArray2D 0 1 { name = "fc" 
-                             ,value = IntCell 3
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = (Just ref_from)
-                             } 
- <| cellSetAutoArray2D 1 1 { name = "fc" 
-                             ,value = IntCell 0
-                             ,formula = { eval = True, f = formula }
-                             , ref_To = (Just ref_to)
-                             , ref_From = Nothing
-                             } 
- <| f10
-
-
-f12 =
-  f10
- |> cellSetAutoArray2D 0 0 { name = "fc" 
-                             ,value = IntCell 5
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = (Just ref_from)
-                             } 
- |> cellSetAutoArray2D 0 1 { name = "fc" 
-                             ,value = IntCell 3
-                             ,formula = { eval = False, f = "" }
-                             , ref_To = Nothing
-                             , ref_From = (Just ref_from)
-                             } 
- |> cellSetAutoArray2D 1 1 { name = "fc" 
-                             ,value = IntCell 0
-                             ,formula = { eval = True, f = formula }
-                             , ref_To = (Just ref_to)
-                             , ref_From = Nothing
-                             } 
 
