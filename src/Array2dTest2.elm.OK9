@@ -755,9 +755,8 @@ cloneAutoArray2D  aa2d_ =
     in
     new_aa2d_2
 
---insertRowAutoArray2D : Int -> AutoArray2D a -> AutoArray2D a
-insertRowAutoArray2D : Int -> ( Int -> a -> a) -> AutoArray2D a -> AutoArray2D a
-insertRowAutoArray2D  insert_row_index func aa2d_ =
+insertRowAutoArray2D : Int -> AutoArray2D a -> AutoArray2D a
+insertRowAutoArray2D  insert_row_index aa2d_ =
     let
       row_max = aa2d_.head_size_x * aa2d_.surface_size
       col_max = aa2d_.head_size_y * aa2d_.surface_size
@@ -775,9 +774,7 @@ insertRowAutoArray2D  insert_row_index func aa2d_ =
 
               else
                 let
-                  --cell = cellGetAutoArray2D r c aa2d__2
-                  cell_old = cellGetAutoArray2D r c aa2d__2
-                  cell = func insert_row_index cell_old
+                  cell = cellGetAutoArray2D r c aa2d__2
 
                   new_aa2d__3 = if r >=  insert_row_index_ then
                                    cellSetAutoArray2D (r+1) c cell new_aa2d__2
@@ -800,9 +797,8 @@ insertRowAutoArray2D  insert_row_index func aa2d_ =
     in
     result
 
---insertColAutoArray2D : Int -> AutoArray2D a -> AutoArray2D a
-insertColAutoArray2D : Int -> ( Int -> a -> a ) -> AutoArray2D a -> AutoArray2D a
-insertColAutoArray2D  insert_col_index func aa2d_ =
+insertColAutoArray2D : Int -> AutoArray2D a -> AutoArray2D a
+insertColAutoArray2D  insert_col_index aa2d_ =
     let
       row_max = aa2d_.head_size_x * aa2d_.surface_size
       col_max = aa2d_.head_size_y * aa2d_.surface_size
@@ -820,9 +816,7 @@ insertColAutoArray2D  insert_col_index func aa2d_ =
 
               else
                 let
-                  --cell = cellGetAutoArray2D r c aa2d__2
-                  cell_old = cellGetAutoArray2D r c aa2d__2
-                  cell = func insert_col_index cell_old
+                  cell = cellGetAutoArray2D r c aa2d__2
 
                   new_aa2d__3 = if c >=  insert_col_index_ then
                                    cellSetAutoArray2D r (c+1) cell new_aa2d__2
@@ -1311,111 +1305,8 @@ z12 = dump z11
 z13 = d2d z11
 
 z14 = cloneAutoArray2D z11
-
-insertRow_func : Int -> Cell -> Cell
-insertRow_func row cell =
-     let
-        new_ref_To = case cell.ref_To of
-                       Just ref_To_ ->
-                          let
-                             fr1 : CellRef -> CellRef
-                             fr1 cellref =
-                                 let
-                                  --r = Tuple.first cellref
-                                  --c = Tuple.second cellref
-                                  (r,c) = cellref
-                                  new_r = if r >= row then
-                                             r + 1
-                                          else
-                                             r
-                                 in
-                                 (new_r , c)
-                          in
-                          (Just (Array.map fr1 ref_To_))
-
-                            
-                       Nothing ->
-                          Nothing
-
-        new_ref_From = case cell.ref_From of
-                       Just ref_From_ ->
-                          let
-                             fr2 : CellRef -> CellRef
-                             fr2 cellref =
-                                 let
-                                  --r = Tuple.first cellref
-                                  --c = Tuple.second cellref
-                                  (r,c) = cellref
-                                  new_r = if r >= row then
-                                             r + 1
-                                          else
-                                             r
-                                 in
-                                 (new_r , c)
-                          in
-                          (Just (Array.map fr2 ref_From_))
-
-                            
-                       Nothing ->
-                          Nothing
-     in
-     { cell | ref_To = new_ref_To, ref_From = new_ref_From}
-
-insertCol_func : Int -> Cell -> Cell
-insertCol_func col cell =
-     let
-        new_ref_To = case cell.ref_To of
-                       Just ref_To_ ->
-                          let
-                             fc1 : CellRef -> CellRef
-                             fc1 cellref =
-                                 let
-                                  --r = Tuple.first cellref
-                                  --c = Tuple.second cellref
-                                  (r,c) = cellref
-                                  new_c = if c >= col then
-                                             c + 1
-                                          else
-                                             c
-                                 in
-                                 (r , new_c)
-                          in
-                          (Just (Array.map fc1 ref_To_))
-
-                            
-                       Nothing ->
-                          Nothing
-
-        new_ref_From = case cell.ref_From of
-                       Just ref_From_ ->
-                          let
-                             fc2 : CellRef -> CellRef
-                             fc2 cellref =
-                                 let
-                                  --r = Tuple.first cellref
-                                  --c = Tuple.second cellref
-                                  (r,c) = cellref
-                                  new_c = if c >= col then
-                                             c + 1
-                                          else
-                                             c
-                                 in
-                                 (r , new_c)
-                          in
-                          (Just (Array.map fc2 ref_From_))
-
-                            
-                       Nothing ->
-                          Nothing
-     in
-     { cell | ref_To = new_ref_To, ref_From = new_ref_From}
-
-
-
-
---z15 = insertRowAutoArray2D 1 z11
-z15 = insertRowAutoArray2D 1 insertRow_func z11
-z16 = insertColAutoArray2D 1 insertCol_func z11
+z15 = insertRowAutoArray2D 1 z11
+z16 = insertColAutoArray2D 1 z11
 
 -------------------------------------------
 -- Formula TEST
